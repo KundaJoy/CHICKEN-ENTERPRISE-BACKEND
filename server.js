@@ -15,16 +15,27 @@ const app = express();
 app.use(express.json());
 
 // CORS configuration
+// Use localhost for development, your Vercel frontend for production
+const allowedOrigins = [
+  'http://localhost:5173', // local dev
+  'https://your-frontend.vercel.app' // replace with your Vercel URL
+];
+
 app.use(cors({
-  origin: 'http://localhost:5173', // frontend URL
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // if you want cookies/auth headers
+  credentials: true // allow cookies/auth headers
 }));
+
+// Health check route
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Backend is running 🚀' });
+});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));
@@ -36,10 +47,10 @@ app.use('/api/sales', saleRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/reports', reportRoutes);
 
-// Global error handler (optional but recommended)
+// Global error handler
 app.use((err, req, res, next) => {
-    console.error('Server error:', err);
-    res.status(500).json({ message: 'Server error' });
+  console.error('Server error:', err);
+  res.status(500).json({ message: 'Server error' });
 });
 
 // Start server
