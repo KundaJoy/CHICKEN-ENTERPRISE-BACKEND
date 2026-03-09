@@ -17,8 +17,8 @@ app.use(express.json());
 // CORS configuration
 // Use localhost for development, your Vercel frontend for production
 const allowedOrigins = [
-  'http://localhost:5173', // local dev
-  'https://your-frontend.vercel.app' // replace with your Vercel URL
+  'http://localhost:5173',
+  'https://chicken-enterprise-frontend-ko2n.vercel.app'
 ];
 
 app.use(cors({
